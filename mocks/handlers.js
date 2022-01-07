@@ -1,6 +1,8 @@
+// https://tomasgildev.com/posts/testing-nextjs-static-pages
+
 import { rest } from 'msw'
 
-const results = [
+const mockList = [
   {
     'name': 'bulbasaur',
     'url': 'https://pokeapi.co/api/v2/pokemon/1/'
@@ -39,22 +41,47 @@ const results = [
   }
 ]
 
+const mockStats = [
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'hp' } },
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'attack' } },
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'defense' } },
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'special-attack' } },
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'special-defense' } },
+  { 'base_stat': 'MOCKED DATA', 'stat': { 'name': 'speed' }  }
+]
+
 export const handlers = [
   rest.get('https://pokeapi.co/api/v2/pokemon', async (req, res, ctx) => {
     return res(
       ctx.json({
         test: true,
-        results: results
+        results: mockList
       })
     )
   }),
 
-  // rest.get('https://pokeapi.co/api/v2/pokemon/:number', (req, res, ctx) => {
-  //   const { number } = req.params
-  //   console.log('number!!', number)
-  //   return res(
-  //     ctx.status(200),
-  //     ctx.json({ results })
-  //   )
-  // }),
+  rest.get('https://pokeapi.co/api/v2/pokemon/:number', async (req, res, ctx) => {
+    const number = parseInt(req.params.number)
+
+    if (number <= 9) {
+      const realResponse = await ctx.fetch(`https://pokeapi.co/api/v2/pokemon/${number}`)
+        .then(response => response.json())
+  
+      return res(
+        ctx.status(200),
+        ctx.json({
+          ...realResponse,
+          stats: mockStats
+        })
+      )
+    } else {
+      const dittoResponse = await ctx.fetch(`https://pokeapi.co/api/v2/pokemon/132`)
+        .then(response => response.json())
+  
+      return res(
+        ctx.status(200),
+        ctx.json({...dittoResponse})
+      )
+    }
+  })
 ]

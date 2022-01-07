@@ -13,20 +13,30 @@ async function getPokemonData(number) {
     .then((data) => ({
       name: data.name,
       sprites: data.sprites,
-      stats: data.stats
+      stats: data.stats.map(stat => ({
+        name: stat.stat.name,
+        base: stat.base_stat
+      }))
     }))
     .catch(error => console.error('error getting data: ', error))
 }
 
 const Page = (props) => {
   return (
-    <main>
-      <h1>{props.data.name}</h1>
-      <img src={props.data.sprites.front_default} alt={props.data.name} />
-      <pre>
-        {JSON.stringify(props.data.stats, null, 2)}
-      </pre>
-    </main>
+    <>
+      <main>
+        <h1>{props.data.name}</h1>
+        <img src={props.data.sprites.front_default} alt={props.data.name} />
+        <pre>
+          {JSON.stringify(props.data.stats, null, 2)}
+        </pre>
+      </main>
+      <span className='env'>
+        <span>at build time, process.env.TESTING was {props.isTesting}</span>
+        <br/>
+        <span>currently, process.env.TESTING is {(process.env.TESTING === 'true').toString()}</span>
+      </span>
+    </>
   )
 }
 
@@ -37,7 +47,8 @@ export async function getStaticProps(context) {
   return {
     props: {
       number: number,
-      data: await getPokemonData(number)
+      data: await getPokemonData(number),
+      isTesting: (process.env.TESTING === 'true').toString() || 'undefined'
     }
   }
 }

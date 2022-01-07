@@ -16,7 +16,7 @@ export default function Home(props) {
             const number = apiUrl.split('/').filter(Boolean)[5]
             return (
               <li key={name}>
-                <Link href={`${number}`}>
+                <Link href={`/${number}`}>
                   <a>
                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png`} alt={name} />
                     {name}
@@ -26,9 +26,14 @@ export default function Home(props) {
             )
           })}
         </ul>
+        
         <pre>
           {JSON.stringify(props.pokemon, null,  2)}
         </pre>
+
+        <Link href={`/random`}>
+          <a>/random</a>
+        </Link>
       </main>
       <span className='env'>
         <span>at build time, process.env.TESTING was {props.isTesting}</span>
