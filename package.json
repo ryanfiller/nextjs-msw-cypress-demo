@@ -2,11 +2,11 @@
   "name": "msw-tests",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npx kill-port 3000 && next dev",
     "build": "next build",
     "start": "next start",
     "export": "next build && next export && npm run start",
-    "mock": "npx msw init ./public && cross-env TESTING=true next build && next export && npm run start",
+    "mock": "npx kill-port 3000 && npx msw init ./public && cross-env TESTING=true npm run export",
     "test": "npm run mock & ./node_modules/.bin/cypress open",
     "lint": "next lint"
   },
