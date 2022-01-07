@@ -43,3 +43,12 @@ main {
   display: flex;
   flex-direction: column;
 }
+
+.env {
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background: red;
+  color: white;
+}

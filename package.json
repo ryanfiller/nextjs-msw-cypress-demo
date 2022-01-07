@@ -5,17 +5,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "serve": "npm run build && npm run start",
-    "export": "next build && next export",
+    "export": "next build && next export && npm run start",
+    "mock": "npx kill-port 3000 && cross-env TESTING=true next build && next export && npm run start",
+    "test": "npm run mock & ./node_modules/.bin/cypress open",
     "lint": "next lint"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "cypress": "^9.2.0",
+    "dotenv": "^10.0.0",
     "eslint": "8.6.0",
-    "eslint-config-next": "12.0.7"
+    "eslint-config-next": "12.0.7",
+    "msw": "^0.36.3"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
